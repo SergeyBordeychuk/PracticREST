@@ -20,6 +20,7 @@ class Lesson(models.Model):
     preview = models.ImageField()
     description = models.TextField(null=True, blank=True)
     link = models.URLField()
+    course = models.ForeignKey(Course, models.CASCADE)
 
     def __str__(self):
         return f'{self.name_lesson}'
