@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
+import materials.models
+
+
 # Create your models here.
 
 class CustomUser(AbstractUser):
@@ -11,3 +14,21 @@ class CustomUser(AbstractUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username',]
+
+
+class Payment(models.Model):
+    METHOD_CHOICES = (
+        ('Cash', 'Наличные'),
+        ('Transfer to account', 'Перевод на счет'),
+    )
+
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    date_pay = models.DateField(auto_now_add=True)
+    payment_course = models.ForeignKey(materials.models.Course, on_delete=models.CASCADE, default=1)
+    payment_lesson = models.ForeignKey(materials.models.Lesson, on_delete=models.CASCADE, default=1)
+    sum = models.IntegerField()
+    method_payment = models.CharField(max_length=50, choices=METHOD_CHOICES)
+
+    class Meta:
+        verbose_name = 'платеж'
+        verbose_name_plural = 'платежи'
