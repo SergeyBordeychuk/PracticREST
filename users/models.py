@@ -24,9 +24,9 @@ class Payment(models.Model):
 
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     date_pay = models.DateField(auto_now_add=True)
-    payment_course = models.ForeignKey(materials.models.Course, on_delete=models.CASCADE, default=1)
-    payment_lesson = models.ForeignKey(materials.models.Lesson, on_delete=models.CASCADE, default=1)
-    sum = models.IntegerField()
+    payment_course = models.ForeignKey(materials.models.Course, on_delete=models.CASCADE, nullable=True)
+    payment_lesson = models.ForeignKey(materials.models.Lesson, on_delete=models.CASCADE, nullable=True)
+    sum = models.PositiveIntegerField()
     method_payment = models.CharField(max_length=50, choices=METHOD_CHOICES)
 
     class Meta:
