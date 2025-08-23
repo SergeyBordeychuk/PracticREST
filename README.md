@@ -20,5 +20,11 @@ pip install -r requirements.txt
 ```commandline
 python manage.py runserver
 ```
-2. Закрыть сервер
+
+2. Действие на сервере
+```commandline
+Просмотр, создание, изменение и удаление уроков, курсов и платежей.
+```
+
+3. Закрыть сервер
 CTRL+C
