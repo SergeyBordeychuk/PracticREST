@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics
 from rest_framework.filters import OrderingFilter
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, UpdateAPIView
 from rest_framework.permissions import AllowAny
 
 from users.forms import CustomUserCreationForm
@@ -28,6 +28,25 @@ class UserCreateAPIView(CreateAPIView):
         user = serializer.save()
         user.set_password(user.password)
         user.save()
+
+
+class UserUpdateAPIView(UpdateAPIView):
+    serializer_class = UserSerializer
+    queryset = CustomUser.objects.all()
+
+
+class UserListAPIView(generics.ListAPIView):
+    serializer_class = UserSerializer
+    queryset = CustomUser.objects.all()
+
+
+class UserRetrieveAPIView(generics.RetrieveAPIView):
+    serializer_class = UserSerializer
+    queryset = CustomUser.objects.all()
+
+
+class UserDestroyAPIView(generics.DestroyAPIView):
+    queryset = CustomUser.objects.all()
 
 
 def profile_info(request, pk):
