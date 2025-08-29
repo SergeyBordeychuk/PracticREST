@@ -1,11 +1,16 @@
 from django.db import models
 
+from users.models import CustomUser
+
+
 # Create your models here.
 
 class Course(models.Model):
     name_course = models.CharField(unique=True, max_length=150)
     preview = models.ImageField()
     description = models.TextField(null=True, blank=True)
+
+    owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     def __str__(self):
         return f'{self.name_course}'
@@ -21,6 +26,8 @@ class Lesson(models.Model):
     description = models.TextField(null=True, blank=True)
     link = models.URLField()
     course = models.ForeignKey(Course, models.CASCADE)
+
+    owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     def __str__(self):
         return f'{self.name_lesson}'
