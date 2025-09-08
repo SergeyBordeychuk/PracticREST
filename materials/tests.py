@@ -1,3 +1,4 @@
+from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
@@ -54,5 +55,11 @@ class TestSubscription(APITestCase):
 
 
     def test_subscription(self):
-        response = self.client.put('/materials/sub/1')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        url = reverse('materials:course-subscription', kwargs={'pk': self.course.pk})
+        r1 = self.client.post(url)
+        self.assertEqual(r1.status_code, status.HTTP_200_OK)
+        self.assertFalse(Subscription.objects.filter(user=self.user, course=self.course).exists())
+
+        r2 = self.client.post(url)
+        self.assertEqual(r2.status_code, status.HTTP_200_OK)
+        self.assertTrue(Subscription.objects.filter(user=self.user, course=self.course).exists())

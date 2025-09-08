@@ -1,4 +1,5 @@
 from rest_framework.exceptions import ValidationError
+from urllib.parse import urlparse
 
 
 class LinkValidator:
@@ -6,5 +7,6 @@ class LinkValidator:
         self.field = field
 
     def __call__(self, value):
-        if not('youtube.com' in value['link']):
+        netloc = urlparse(value['link']).netloc
+        if not(netloc in {'youtube.com','www.youtube.com','youtu.be'}):
             raise ValidationError('Invalid link')
