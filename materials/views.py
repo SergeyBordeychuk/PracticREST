@@ -1,3 +1,4 @@
+from django.shortcuts import redirect
 from rest_framework import viewsets, generics
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
@@ -8,6 +9,8 @@ from materials.models import Course, Lesson, Subscription
 from materials.paginators import CourseLessonPagination
 from materials.permissions import IsModer, IsOwner
 from materials.serializers import CourseSerializer, LessonSerializer, SubSerializer
+
+from .services import  create_product, create_price_product, create_session
 
 
 # Create your views here.
@@ -30,6 +33,12 @@ class CourseViewSet(viewsets.ModelViewSet):
         elif self.action in ['retrieve', 'update']:
             self.permission_classes = (IsModer | IsOwner, IsAuthenticated)
         return super().get_permissions()
+
+    def post(self, request, *args, **kwargs):
+        product = create_product(request)
+        price = create_price_product(request, product)
+        session = create_session(request, product)
+        return redirect(session['url'])
 
 
 class LessonCreateAPIView(generics.CreateAPIView):
