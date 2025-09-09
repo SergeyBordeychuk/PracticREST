@@ -11,10 +11,10 @@ class CustomUser(AbstractUser):
     avatar = models.ImageField()
     city = models.CharField(max_length=30)
     email = models.EmailField(unique=True)
-    username = None
+    username = models.CharField(max_length=30, unique=True)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['username',]
 
 
 class Payment(models.Model):
@@ -25,8 +25,8 @@ class Payment(models.Model):
 
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     date_pay = models.DateField(auto_now_add=True)
-    payment_course = models.ForeignKey(materials.models.Course, on_delete=models.CASCADE, null=True, blank=True)
-    payment_lesson = models.ForeignKey(materials.models.Lesson, on_delete=models.CASCADE, null=True, blank=True)
+    payment_course = models.ForeignKey('materials.Course', on_delete=models.CASCADE, null=True, blank=True)
+    payment_lesson = models.ForeignKey('materials.Lesson', on_delete=models.CASCADE, null=True, blank=True)
     sum = models.PositiveIntegerField()
     method_payment = models.CharField(max_length=50, choices=METHOD_CHOICES)
 
