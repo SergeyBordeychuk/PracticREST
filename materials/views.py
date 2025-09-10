@@ -16,16 +16,19 @@ from .services import  create_product, create_price_product, create_session
 # Create your views here.
 
 class CourseViewSet(viewsets.ModelViewSet):
+    '''CRUD операции для модели Course'''
     serializer_class = CourseSerializer
     queryset = Course.objects.all()
     pagination_class = CourseLessonPagination
 
     def perform_create(self, serializer):
+        '''создание курса'''
         course = serializer.save()
         course.owner = self.request.user
         course.save()
 
     def get_permissions(self):
+        '''получение прав'''
         if self.action == 'create':
             self.permission_classes = (~IsModer, IsAuthenticated)
         elif self.action == 'destroy':
@@ -35,6 +38,7 @@ class CourseViewSet(viewsets.ModelViewSet):
         return super().get_permissions()
 
     def post(self, request, *args, **kwargs):
+        '''создание оплаты'''
         product = create_product(request)
         price = create_price_product(request, product)
         session = create_session(request, product)
@@ -42,6 +46,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 
 
 class LessonCreateAPIView(generics.CreateAPIView):
+    '''Создание урока'''
     serializer_class = LessonSerializer
     permission_classes = [~IsModer | IsOwner, IsAuthenticated]
 
@@ -52,6 +57,7 @@ class LessonCreateAPIView(generics.CreateAPIView):
 
 
 class LessonListAPIView(generics.ListAPIView):
+    '''Просмотр всех уроков'''
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
     permission_classes = [IsModer,]
@@ -59,27 +65,32 @@ class LessonListAPIView(generics.ListAPIView):
 
 
 class LessonRetrieveAPIView(generics.RetrieveAPIView):
+    '''Просмотр урока'''
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
     permission_classes = [IsModer | IsOwner, IsAuthenticated]
 
 
 class LessonUpdateAPIView(generics.UpdateAPIView):
+    '''Обновление инф. урока'''
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
     permission_classes = [IsModer | IsOwner, IsAuthenticated]
 
 
 class LessonDestroyAPIView(generics.DestroyAPIView):
+    '''Удаление урока'''
     queryset = Lesson.objects.all()
     permission_classes = [~IsModer | IsOwner, IsAuthenticated]
 
 
 class SubscriptionApiView(APIView):
+    '''Работа с подпиской'''
     permission_classes = [IsAuthenticated]
     serializer_class = SubSerializer
 
     def post(self, request, pk):
+        '''Удаление или добавление подписки'''
         course = get_object_or_404(Course, pk=pk)
         sub = Subscription.objects.filter(user=request.user, course=course).first()
         if sub:
