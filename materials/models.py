@@ -22,7 +22,6 @@ class Course(models.Model):
 
 class Lesson(models.Model):
     name_lesson = models.CharField(max_length=150)
-    preview = models.ImageField()
     description = models.TextField(null=True, blank=True)
     link = models.URLField()
     course = models.ForeignKey(Course, models.CASCADE)
@@ -35,3 +34,12 @@ class Lesson(models.Model):
     class Meta:
         verbose_name = 'урок'
         verbose_name_plural = 'уроки'
+
+
+class Subscription(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = 'подписка'
+        verbose_name_plural = 'подписки'
