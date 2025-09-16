@@ -1,3 +1,6 @@
+import os
+
+from django.core.mail import send_mail
 from django.shortcuts import redirect
 from rest_framework import viewsets, generics
 from rest_framework.generics import get_object_or_404
@@ -42,6 +45,14 @@ class CourseViewSet(viewsets.ModelViewSet):
         product = create_product(request)
         price = create_price_product(request, product)
         session = create_session(request, product)
+        if self.action in 'update':
+            course = self.get_object()
+            if course.subscriptions == 'True':
+                send_mail(subject=f'Обновление в курсе {course.name}',
+                          message='Новое обновление курса!!',
+                          from_email=os.getenv('EMAIL_HOST_USER'),
+                          recipient_list=[course.owner.email],
+                          )
         return redirect(session['url'])
 
 
