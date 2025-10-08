@@ -33,3 +33,8 @@ python manage.py runserver
 
 4. Закрыть сервер
 CTRL+C
+
+5. Docker
+```commandline
+Для запуска можно использовать команду docker-compose up -d --build
+```
