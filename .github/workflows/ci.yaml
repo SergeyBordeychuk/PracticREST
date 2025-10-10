@@ -3,76 +3,76 @@ name: Django CI
 on: [push]
 
 jobs:
-#  test:
-#    runs-on: ubuntu-latest
-#
-#    services:
-#      # Label used to access the service container
-#      postgres:
-#        # Docker Hub image
-#        image: postgres
-#        # Provide the password for postgres
-#        env:
-#          POSTGRES_USER: postgres
-#          POSTGRES_PASSWORD: admin
-#          POSTGRES_DB: PracticRest
-#          POSTGRES_PORT: 5432
-#        # Set health checks to wait until postgres has started
-#        options: >-
-#          --health-cmd pg_isready
-#          --health-interval 10s
-#          --health-timeout 5s
-#          --health-retries 5
-#        ports: ["5432:5432"]
-#
-#    steps:
-#      - name: Check out code
-#        uses: actions/checkout@v3
-#
-#      - name: Set up Python
-#        uses: actions/setup-python@v4
-#        with:
-#          python-version: '3.13.7'
-#
-#      - name: Install dependencies
-#        run: |
-#          python -m pip install --upgrade pip
-#          pip install -r requirements.txt
-#
-#      - name: Run tests
-#        env:
-#          SECRET_KEY: fdsafsad31251436
-#          DEBUG: True
-#          NAME: PracticRest
-#          USER: postgres
-#          PASSWORD: admin
-#          HOST: localhost
-#          PORT: 5432
-#          POSTGRES_USER: postgres
-#          POSTGRES_PASSWORD: admin
-#          POSTGRES_DB: PracticRest
-#          POSTGRES_PORT: 5432
-#        run: python manage.py test
-
-  build:
-#    needs: test
+  test:
     runs-on: ubuntu-latest
+
+    services:
+      # Label used to access the service container
+      postgres:
+        # Docker Hub image
+        image: postgres
+        # Provide the password for postgres
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: admin
+          POSTGRES_DB: PracticRest
+          POSTGRES_PORT: 5432
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports: ["5432:5432"]
 
     steps:
       - name: Check out code
         uses: actions/checkout@v3
 
-      - name: Log in in Docker hub
-        run: echo ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.13.7'
 
-      - name: Build Docker image
-        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }} .
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-      - name: Push Docker image in Docker hub
-        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
+      - name: Run tests
+        env:
+          SECRET_KEY: fdsafsad31251436
+          DEBUG: True
+          NAME: PracticRest
+          USER: postgres
+          PASSWORD: admin
+          HOST: localhost
+          PORT: 5432
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: admin
+          POSTGRES_DB: PracticRest
+          POSTGRES_PORT: 5432
+        run: python manage.py test
+
+#  build:
+#    needs: test
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - name: Check out code
+#        uses: actions/checkout@v3
+#
+#      - name: Log in in Docker hub
+#        run: echo ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
+#
+#      - name: Build Docker image
+#        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }} .
+#
+#      - name: Push Docker image in Docker hub
+#        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
 
   deploy:
-    needs: build
+    needs: test
     runs-on: ubuntu-latest
 
 #    steps:
