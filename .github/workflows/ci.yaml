@@ -1,6 +1,6 @@
 name: Django CI
 
-on: [push]
+on: [ push ]
 
 jobs:
   test:
@@ -23,7 +23,7 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-        ports: ["5432:5432"]
+        ports: [ "5432:5432" ]
 
     steps:
       - name: Check out code
@@ -54,52 +54,19 @@ jobs:
           POSTGRES_PORT: 5432
         run: python manage.py test
 
-#  build:
-#    needs: test
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      - name: Check out code
-#        uses: actions/checkout@v3
-#
-#      - name: Log in in Docker hub
-#        run: echo ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
-#
-#      - name: Build Docker image
-#        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }} .
-#
-#      - name: Push Docker image in Docker hub
-#        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
-
   deploy:
     needs: test
     runs-on: ubuntu-latest
 
-#    steps:
-#      - name: Set up SSH
-#        uses: webfactory/ssh-agent@v0.9.0
-#        with:
-#          ssh-private-key: ${{ secrets.SSH_KEY }}
-#
-#
-#
-#      - name: Deploy to server
-#        run: |
-#          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_KEY }}@${{ secrets.SERVER_IP }} << 'EOF'
-#          docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
-#          docker stop myapp || true
-#          docker rm myapp || true
-#          docker run -d -p 80:8000 ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
-#          EOF
     steps:
-    - name: Deploy to server # Шаг развертывания на сервер
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.SERVER_IP }}
-        username: ${{ secrets.SSH_USER }}
-        key: ${{ secrets.SSH_KEY }}
-        script: |
-          cd ~/PracticREST
-          git pull
-          docker compose down
-          docker-compose up -d
+      - name: Deploy to server # Шаг развертывания на сервер
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd ~/PracticREST
+            git pull
+            docker compose down
+            docker-compose up -d --build
