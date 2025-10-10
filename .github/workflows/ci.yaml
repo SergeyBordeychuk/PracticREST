@@ -44,7 +44,7 @@ jobs:
           NAME: PracticRest
           USER: postgres
           PASSWORD: admin
-          HOST: localhost
+          HOST: postgres
           PORT: 5432
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: admin
