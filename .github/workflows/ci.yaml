@@ -16,6 +16,7 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: admin
           POSTGRES_DB: PracticRest
+          POSTGRES_PORT: 5432
         # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready
@@ -49,6 +50,7 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: admin
           POSTGRES_DB: PracticRest
+          POSTGRES_PORT: 5432
         run: python manage.py test
 
   build:
