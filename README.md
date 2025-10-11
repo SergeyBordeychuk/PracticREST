@@ -48,3 +48,11 @@ docker stats
 ```commandline
 docker-compose logs
 ```
+
+7. Запуск workflows
+```commandline
+workflows запускается после push на github достатчно написать 3 команды
+git add .
+git commit -m 'message commit'
+git push (u can add link to reposetori)
+```
