@@ -9,11 +9,33 @@ services:
     environment:
       - DEBUG=True
       - DATABASE_HOST=db
+      - SECRET_KEY=os.getenv('SECRET_KEY')
     volumes:
       - .:/code
       - static_volume:/code/static
     ports:
       - '8000:8000'
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    env_file:
+      - .env
+
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: test
+    command:
+      bash -c "python manage.py test"
+    environment:
+      - DEBUG=True
+      - DATABASE_HOST=db
+    volumes:
+      - .:/code
+      - static_volume:/code/static
     depends_on:
       db:
         condition: service_healthy
