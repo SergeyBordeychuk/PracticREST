@@ -33,3 +33,26 @@ python manage.py runserver
 
 4. Закрыть сервер
 CTRL+C
+
+5. Docker
+```commandline
+Для запуска можно использовать команду docker-compose up -d --build
+```
+6. Проверка работоспособности каждого сервиса
+```commandline
+docker ps
+```
+```commandline
+docker stats
+```
+```commandline
+docker-compose logs
+```
+
+7. Запуск workflows
+```commandline
+workflows запускается после push на github достатчно написать 3 команды
+git add .
+git commit -m 'message commit'
+git push (u can add link to reposetori)
+```
