@@ -30,6 +30,7 @@ class CourseViewSet(viewsets.ModelViewSet):
         course.owner = self.request.user
         course.save()
 
+
     def get_permissions(self):
         '''получение прав'''
         if self.action == 'create':
